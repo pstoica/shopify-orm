@@ -10,6 +10,17 @@ esbuild
     platform: "node",
     format: "cjs",
     target: "node14",
-    plugins: [nodeExternalsPlugin()],
+    plugins: [
+      nodeExternalsPlugin(),
+      {
+        name: 'TypeScriptDeclarationsPlugin',
+        setup(build) {
+          build.onEnd((result) => {
+            if (result.errors.length > 0) return
+            execSync('tsc')
+          })
+        }
+      }
+    ],
   })
   .catch(() => process.exit(1));
